@@ -60,6 +60,10 @@ var userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    isOtpVerified: {
+      type: Boolean,
+      default: false,
+    },
     createdOn: {
       type: Date,
       default: Date.now,

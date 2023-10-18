@@ -1,8 +1,9 @@
 import express from "express";
-import errorHandler, { BadRequest } from "./handlers/error_handler.js";
+import errorHandler from "./handlers/error_handler.js";
 import mongoose from "mongoose";
-import router from "./routes/user_route.js";
 import cors from "cors";
+import userRouter from "./routes/user_route.js";
+import countryRouter from "./routes/country_route.js";
 
 const app = express();
 const port = 3000;
@@ -24,9 +25,13 @@ app.use(
     limit: "20mb",
   })
 );
-app.use("/api/user", router);
+app.use("/api/user", userRouter);
+app.use("/api",countryRouter);
 app.use("/api/profile", express.static("./public/profile"));
-
+app.use("/",(req,res,next)=>{
+  
+res.json({message:"hello world"});
+});
 app.use(errorHandler);
 
 app.listen(port, () => console.log(`Example app listening on port ${port}!`));

@@ -1,5 +1,10 @@
-import path from "path";
+import path, { resolve } from "path";
 import fs from "fs";
+import nodemailer from "nodemailer";
+import errorHandler from "../handlers/error_handler.js";
+import { rejects } from "assert";
+
+
 function saveBase64Image(base64image, folderName, filename, fileExtension) {
   const publicPath = path.join(process.cwd(), "/public");
   const folderPath = path.join(publicPath, folderName);
@@ -33,4 +38,37 @@ function generateShortCode(referrer) {
 
   return `NB-${code}`;
 }
-export { saveBase64Image, generateShortCode };
+
+function sendEmail(email,otp){
+  const html=fs.readFileSync(process.cwd()+"/html/index.html","utf-8");
+  var otpTemplate = html
+    .replace("otpPlaceholder", otp)
+    .replace("emailplaceholder", email);
+const transport=  nodemailer.createTransport({
+  host:"smtp.office365.com",
+  port:587,
+  auth:{
+    user:"bytestechsol@gmail.com",
+    pass:"(TRFn,=Zdsp3n5r",
+  }
+  },);
+
+  
+  return new Promise(async (resolve,rejects)=>{
+    try{
+      const info=await transport.sendMail({
+        from:"bytestechsol@gmail.com",
+        to:email,
+        subject:"Otp Verification",
+        html:otpTemplate,
+      });
+      console.log("Email sent " + info.response);
+      resolve();
+    }catch(err){
+      rejects(err);
+    }
+  });
+}
+
+
+export { saveBase64Image, generateShortCode, sendEmail };

@@ -1,5 +1,8 @@
 import Joi from "joi";
 import { BadRequest } from "../handlers/error_handler.js";
+import { application } from "express";
+
+
 function loginMiddleware(req, res, next) {
   var joiSchema = Joi.object({
     userName: Joi.string().required(),
@@ -12,6 +15,49 @@ function loginMiddleware(req, res, next) {
     next();
   }
 }
+
+
+function verifyToken(req,res,next){
+  const header = req.headers.authorization;
+  
+  if (header == null) {
+    throw new BadRequest("Auth token is required!");
+  } else {
+    
+    const token = header.split("Bearer ")[1];
+    req.tokenVal=token;
+    next();
+  }
+}
+
+function verifyMiddleware(req, res, next) {
+  var joiSchema = Joi.object({
+    otp: Joi.string().min(5).required(),
+  });
+  const { error, value } = joiSchema.validate(req.body);
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  } else {
+    next();
+  }
+}
+
+
+
+function sendOtpMiddleware(req, res, next) {
+  var joiSchema = Joi.object({
+    email: Joi.string().email().required(),
+  });
+  const { error, value } = joiSchema.validate(req.body);
+  if (error) {
+    throw new BadRequest(error.details[0].message);
+  } else {
+    next();
+  }
+}
+
+
+
 function signUpMiddleware(req, res, next) {
   var joiSchema = Joi.object({
     firstName: Joi.string().min(3).required(),
@@ -37,4 +83,10 @@ function signUpMiddleware(req, res, next) {
   }
 }
 
-export { signUpMiddleware, loginMiddleware };
+export {
+  signUpMiddleware,
+  loginMiddleware,
+  verifyMiddleware,
+  sendOtpMiddleware,
+  verifyToken
+};

@@ -7,7 +7,7 @@ class CustomError extends Error {
 }
 
 export  class NotFoundError extends CustomError {
-  constructor(message = "Resource not found.") {
+  constructor(message = "This email is not registered yet!") {
     super(message, 404);
   }
 }
@@ -29,7 +29,7 @@ export default function errorHandler(err, req, res, next) {
     res.status(err.statusCode).json({ success: false, message: err.message });
     
   } else {
-    console.error(err.stack); 
+    console.error(err.message); 
     res.status(500).json({ success:false,message:err.message,error: err });
   }
 }
