@@ -1,4 +1,5 @@
-import mongoose, { Schema, model } from "mongoose";
+
+import { Schema, model } from "mongoose";
 var userSchema = new Schema(
   {
     _id: {
@@ -55,6 +56,52 @@ var userSchema = new Schema(
         type: String,
         required: true,
       },
+    },
+    age:{
+      type:String,
+     default:"",
+    },
+    height:{
+      feet:{
+        type:String,
+        default:"",
+      },
+      inches:{
+        type:String,
+        default:"",
+      },
+    },
+    weight:{
+      type:String,
+      default:"",
+    },
+    bio:{
+      type:String,
+      default:"",
+    },
+    dob:{
+      type:String,
+      default:"",
+    },
+    status:{
+      type:String,
+     default:"",
+    },
+    education:{
+      type:String,
+      default:"",
+    },
+    religion:{
+      type:String,
+      default:"",
+    },
+    languages:{
+      type:Array,
+      default:"",
+    },
+    occupation:{
+      type:String,
+      default:"",
     },
     isVerified: {
       type: Boolean,

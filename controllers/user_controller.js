@@ -23,17 +23,26 @@ export default class UserController {
         $or: [{ email: userName }, { userName: userName }],
       });
       if (user) {
-        const result = await bcrypt.compare(password, user.password);
-        if (result) {
-          const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET);
-          res.json({
-            success: true,
-            message: "User logged in successfully!",
-            data: user,
-            token: token,
-          });
+        if (user.isOtpVerified) {
+          const result = await bcrypt.compare(password, user.password);
+          if (result) {
+            const token = jwt.sign(
+              JSON.stringify(user),
+              process.env.JWT_SECRET
+            );
+          
+            res.json({
+              success: true,
+              message: "User logged in successfully!",
+              profileCompletion:"50",
+              data: user,
+              token: token,
+            });
+          } else {
+            throw new BadRequest("Check your entered password");
+          }
         } else {
-          throw new BadRequest("Check your entered password");
+          throw new BadRequest("Your Account is not verified yet!");
         }
       } else {
         throw new NotFoundError("User not found");
@@ -137,6 +146,22 @@ export default class UserController {
       next(err);
     }
   }
+  static async updateProfile(req, res, next) {
+    const {
+      age,
+      feet,
+      inches,
+      weight,
+      bio,
+      dob,
+      status,
+      education,
+      religion,
+      languages,
+      occupation,
+    } = req.body;
+    
+  }
 
   static async verifyOtp(req, res, next) {
     const token = req.tokenVal;
@@ -144,7 +169,11 @@ export default class UserController {
     const doc = jwt.decode(token);
     const email = doc.email;
     const { otp } = req.body;
-    await User.findOne({ email: email })
+    await User.findOneAndUpdate(
+      { email: email },
+      { isOtpVerified: true },
+      { new: true }
+    )
       .then((doc) => {
         if (doc) {
           const storedOtp = otpMap.get(email);
@@ -153,6 +182,7 @@ export default class UserController {
             res.json({
               success: true,
               message: "Email has been verified successfully",
+              data: doc,
             });
             otpMap.delete(email);
           } else {

@@ -1,8 +1,11 @@
-import path, { resolve } from "path";
+import path from "path";
 import fs from "fs";
 import nodemailer from "nodemailer";
-import errorHandler from "../handlers/error_handler.js";
-import { rejects } from "assert";
+
+
+function capitalizeFirstLetter(word) {
+  return `${word[0].toUpperCase()}${word.slice(1)}`;
+}
 
 
 function saveBase64Image(base64image, folderName, filename, fileExtension) {
@@ -71,4 +74,4 @@ const transport=  nodemailer.createTransport({
 }
 
 
-export { saveBase64Image, generateShortCode, sendEmail };
+export { saveBase64Image, generateShortCode, sendEmail,capitalizeFirstLetter };
