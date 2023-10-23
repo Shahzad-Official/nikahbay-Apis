@@ -99,7 +99,11 @@ var userSchema = new Schema(
       type:Array,
       default:"",
     },
-    occupation:{
+    profession:{
+      type:String,
+      default:"",
+    },
+    income:{
       type:String,
       default:"",
     },

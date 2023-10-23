@@ -4,6 +4,7 @@ import bcrypt from "bcrypt";
 import fs from "fs";
 import {
   generateShortCode,
+  profilePercentage,
   saveBase64Image,
   sendEmail,
 } from "../utils/app_functions.js";
@@ -26,15 +27,16 @@ export default class UserController {
         if (user.isOtpVerified) {
           const result = await bcrypt.compare(password, user.password);
           if (result) {
+           
             const token = jwt.sign(
               JSON.stringify(user),
               process.env.JWT_SECRET
             );
-          
+
             res.json({
               success: true,
               message: "User logged in successfully!",
-              profileCompletion:"50",
+              profileCompletion: `${profilePercentage(user)}`,
               data: user,
               token: token,
             });
@@ -147,20 +149,25 @@ export default class UserController {
     }
   }
   static async updateProfile(req, res, next) {
-    const {
-      age,
-      feet,
-      inches,
-      weight,
-      bio,
-      dob,
-      status,
-      education,
-      religion,
-      languages,
-      occupation,
-    } = req.body;
-    
+    const token = req.tokenVal;
+    const doc = jwt.decode(token);
+    const email = doc.email;
+
+    await User.findOneAndUpdate({ email: email }, req.body, { new: true })
+      .then((user) => {
+        const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET);
+
+        res.json({
+          success: true,
+          message: "Profile updated successfully!",
+          profileCompletion: `${profilePercentage(user)}`,
+          data: user,
+          token: token,
+        });
+      })
+      .catch((err) => {
+        next(err);
+      });
   }
 
   static async verifyOtp(req, res, next) {
@@ -196,8 +203,7 @@ export default class UserController {
         next(err);
       });
   }
-  static async update(req, res) {}
-  static async updatePassword(req, res) {}
+
   static async sendOtp(req, res, next) {
     const { email } = req.body;
     await User.findOne({ email: email })
