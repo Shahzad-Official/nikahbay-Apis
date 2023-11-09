@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
+import { capitalizeFirstLetter } from "../../utils/app_functions.js";
 import Hobby from "../models/hobby_model.js";
-import { capitalizeFirstLetter } from "../utils/app_functions.js";
 
 class HobbyController{
     static async addHobby(req,res,next){

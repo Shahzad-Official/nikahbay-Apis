@@ -1,5 +1,6 @@
 
 import { Schema, model } from "mongoose";
+
 var userSchema = new Schema(
   {
     _id: {

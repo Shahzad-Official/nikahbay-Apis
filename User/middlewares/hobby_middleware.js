@@ -1,5 +1,5 @@
 import Joi from "joi";
-import { BadRequest } from "../handlers/error_handler.js";
+import { BadRequest } from "../../handlers/error_handler.js";
 
 function hobbyMiddleware(req,res,next){
     var hobbySchema=Joi.object({

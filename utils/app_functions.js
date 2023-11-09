@@ -7,13 +7,13 @@ function capitalizeFirstLetter(word) {
 }
 
 function saveBase64Image(base64image, folderName, filename, fileExtension) {
+  if (base64image.includes("base64,")) {
+    base64image = base64image.split("base64,")[1];
+  }
   const publicPath = path.join(process.cwd(), "/public");
   const folderPath = path.join(publicPath, folderName);
-  const fileName=filename + Date.now() + "." + fileExtension;
-  const filePath = path.join(
-    folderPath,
-    fileName
-  );
+  const fileName = filename + Date.now() + "." + fileExtension;
+  const filePath = path.join(folderPath, fileName);
   if (!fs.existsSync(publicPath)) {
     fs.mkdirSync(publicPath);
     if (!fs.existsSync(folderPath)) {

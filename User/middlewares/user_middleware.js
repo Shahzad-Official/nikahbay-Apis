@@ -1,6 +1,6 @@
 import Joi from "joi";
-import { BadRequest } from "../handlers/error_handler.js";
 import { application } from "express";
+import { BadRequest } from "../../handlers/error_handler.js";
 
 function loginMiddleware(req, res, next) {
   var joiSchema = Joi.object({

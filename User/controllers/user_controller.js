@@ -1,4 +1,4 @@
-import { BadRequest, NotFoundError } from "../handlers/error_handler.js";
+import { BadRequest, NotFoundError } from "../../handlers/error_handler.js";
 import User from "../models/user_model.js";
 import bcrypt from "bcrypt";
 import fs from "fs";
@@ -7,14 +7,14 @@ import {
   profilePercentage,
   saveBase64Image,
   sendEmail,
-} from "../utils/app_functions.js";
+} from "../../utils/app_functions.js";
 import mongoose from "mongoose";
 import jwt from "jsonwebtoken";
 import env from "dotenv";
 import { generate } from "otp-generator";
 env.config();
 
-var otpMap = new Map();
+export var otpMap = new Map();
 
 export default class UserController {
   static async login(req, res, next) {
@@ -27,7 +27,6 @@ export default class UserController {
         if (user.isOtpVerified) {
           const result = await bcrypt.compare(password, user.password);
           if (result) {
-           
             const token = jwt.sign(
               JSON.stringify(user),
               process.env.JWT_SECRET
