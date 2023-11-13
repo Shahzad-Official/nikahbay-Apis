@@ -90,7 +90,7 @@ export default class UserController {
         const path = saveBase64Image(profile, "profile", "profile", "png");
         let newPath;
         if(path.includes("\\")){
-          newPath = path.replace("\\","/").split("public/")[1];
+          newPath = path.replace(/\\/g,"/").split("public/")[1];
         }
         else{
           newPath=path.split("public/")[1];
