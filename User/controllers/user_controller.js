@@ -88,7 +88,13 @@ export default class UserController {
         throw new BadRequest("This username is already registered");
       } else {
         const path = saveBase64Image(profile, "profile", "profile", "png");
-        const newPath = path.split("public/")[1];
+        let newPath;
+        if(path.includes("\\")){
+          newPath = path.replace("\\","/").split("public/")[1];
+        }
+        else{
+          newPath=path.split("public/")[1];
+        }
 
         const otp = generate(5, {
           digits: true,
